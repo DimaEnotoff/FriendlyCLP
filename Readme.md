@@ -16,15 +16,23 @@ Slashes, dot and other special characters that are commonly used in most CLIs ar
 - Gives meaningful error messages if parsing fails
 - Builds help articles automatically
 
+### Quick start
+
+#### 1. Import the library
+```C#
+    using FriendlyCLP;
+```
+
 #### Commands
 
-Friendly CLP command is a class that implements *ICommand* and has *Command* annotation.
+Friendly CLP command is a class that implements `ICommand` and has `Command` annotation.
 *ICommand* has only one method - *Execute*, that contains payload code.
 *Command* annotation has name and description of the command.
 
+```C#
     [Command("dst", "Display sample text.")]
     private class DisplaySampleTextCommand : ICommand
     {
         public string Execute() => "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ...";
     }
-
+```
