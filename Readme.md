@@ -1,6 +1,6 @@
 ## Friendly Command Line Processor
 
-Friendly CLP is a library that facilitates rapid development of command line interfaces. Especially those that are accessed via mobile phones.
+Friendly CLP is a library that facilitates rapid development of command line interfaces. It is especially convinient for accessed via mobile phones.
  
 
 #### Mobile friendly
@@ -37,10 +37,10 @@ Friendly CLP command is a class that implements `ICommand` and has `Command` ann
     }
 ```
 
-#### 3. Create a root command group instance
+#### 3. Create a command tree root
 
 This creates an instance of a command group class that represets a root of a command tree. It can contain other command groups or commands directly.
-Multiple command trees can be used in the same application. They can be used to proccess commands of users with different authorization level, for example.
+Multiple command trees can be used in the same application. They can be used to proccess commands issued by users with different authorization levels, for example.
 
 ```C#
     CommandGroup consoleRoot = new CommandGroup(_appName);
@@ -49,7 +49,6 @@ Multiple command trees can be used in the same application. They can be used to 
 #### 3. Add some commands
 
 ```C#
-    CommandGroup consoleRoot = new CommandGroup(_appName);
     consoleRoot.AddGroup("", "tu", "Some useful text utils.");
 ```
 
