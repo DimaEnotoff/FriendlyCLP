@@ -23,7 +23,7 @@ Slashes, dot and other special characters that are commonly used in most CLIs ar
     using FriendlyCLP;
 ```
 
-#### Commands
+#### 2. Add some commands
 
 Friendly CLP command is a class that implements `ICommand` and has `Command` annotation.
 *ICommand* has only one method - *Execute*, that contains payload code.
@@ -36,3 +36,23 @@ Friendly CLP command is a class that implements `ICommand` and has `Command` ann
         public string Execute() => "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ...";
     }
 ```
+
+#### 3. Create a root command group instance
+
+This creates an instance of a command group class that represets a root of a command tree. It can contain other command groups or commands directly.
+Multiple command trees can be used in the same application. They can be used to proccess commands of users with different authorization level, for example.
+
+```C#
+    CommandGroup consoleRoot = new CommandGroup(_appName);
+```
+
+#### 3. Add some commands
+
+```C#
+    CommandGroup consoleRoot = new CommandGroup(_appName);
+    consoleRoot.AddGroup("", "tu", "Some useful text utils.");
+```
+
+
+
+
