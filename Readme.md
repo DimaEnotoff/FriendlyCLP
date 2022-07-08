@@ -1,33 +1,36 @@
 ## Friendly Command Line Processor
 
-Friendly CLP is a library that facilitates rapid development of command line interfaces. It is especially convinient for accessed via mobile phones.
- 
-
-#### Mobile friendly
-
-Slashes, dot and other special characters that are commonly used in most CLIs are hard to access on mobile phone keyboards. To address this issue Friendly CLP uses spaces only. They are used to separate command groups, commands and parameters from each other.
+Friendly CLP is a library that facilitates rapid development of command line interfaces with focus on convenience of those who access them from a mobile phone.
 
 
-### Features
+### Mobile friendly
+
+Slash, colon, dot and other special characters that are commonly used in most CLIs are cumbersome to access on mobile phone keyboards. To address this issue Friendly CLP uses spaces to separate command groups, commands and parameters from each other.
+
+
+### Other features
 
 - Easy to add commands and organise them in groups
 - Easy to add parameters, some commonly used types are readily available
-- Does all required parsing and calls payload code only if all parameters are valid
-- Gives meaningful error messages if parsing fails
-- Builds help articles automatically
+- All required parsing is done automatically, payload code is called only if command line is valid
+- Meaningful error messages are given if parsing fails
+- Help articles are generated automatically
+
 
 ### Quick start
 
 #### 1. Import the library
+
 ```C#
     using FriendlyCLP;
 ```
 
-#### 2. Add some commands
+#### 2. Add a command
 
-Friendly CLP command is a class that implements `ICommand` and has `Command` annotation.
-*ICommand* has only one method - *Execute*, that contains payload code.
-*Command* annotation has name and description of the command.
+Friendly CLP command is a class that implements `ICommand` and has `Command` annotation.  
+_ICommand_ has only one method _Execute_, it schould contain payload code.
+_Command_ annotation has _name_ and description of the command.
+_Name_ should be concise because it is used to call a command.
 
 ```C#
     [Command("dst", "Display sample text.")]
@@ -37,21 +40,55 @@ Friendly CLP command is a class that implements `ICommand` and has `Command` ann
     }
 ```
 
-#### 3. Create a command tree root
+#### 3. Create a root command group
 
 This creates an instance of a command group class that represets a root of a command tree. It can contain other command groups or commands directly.
 Multiple command trees can be used in the same application. They can be used to proccess commands issued by users with different authorization levels, for example.
 
 ```C#
-    CommandGroup consoleRoot = new CommandGroup(_appName);
+    CommandGroup rootCommandGroup = new CommandGroup("My CLI");
 ```
 
-#### 3. Add some commands
+#### 4. Add new command to the root group
 
 ```C#
-    consoleRoot.AddGroup("", "tu", "Some useful text utils.");
+    rootCommandGroup.AddCommand("", new DisplaySampleTextCommand());
+```
+
+#### 5. Process user input
+
+```C#
+    while (true) Console.WriteLine(rootCommandGroup.ProcessLine(Console.ReadLine()));
 ```
 
 
+### Going further
+
+#### Adding arguments
 
 
+
+```C#
+    [Command("div", "Divide two integer values.")]
+    class DivideCommand : ICommand
+    {
+
+        [Argument(0, "dvd", "Dividend", optional: false, multisegmented: false)]
+        private readonly IntArgument Divident;
+
+        [Argument(1, "dvs", "Divisor", optional: false, multisegmented: false)]
+        private readonly IntArgument Divisor;
+
+        public string Execute()
+        {
+            if (Divisor.Value == 0) return "Can not divide by zero.";
+            return ((float)Divident.Value / Divisor.Value).ToString();
+        }
+    }
+```
+
+#### Arguments
+
+Arguments are classes that extend abstract `Argument` class. Concrete argument implementation has to expose a property through which actual parsed value will be consumed. 
+
+Convert Validate SetDefault
