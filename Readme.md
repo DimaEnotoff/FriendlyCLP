@@ -28,8 +28,8 @@ Slash, colon, dot and other special characters that are commonly used in most CL
 #### 2. Add a command
 
 Friendly CLP command is a class that implements `ICommand` and has `Command` annotation.  
-_ICommand_ has only one method _Execute_ that is a commands entry point.
-_Command_ annotation has _name_ and _description_ of the command.
+_ICommand_ has only one method, called _Execute_ that is a commands entry point and should contain a payload.  
+_Command_ annotation has _name_ and _description_ of the command.  
 _Name_ should be concise because users will have to type it to call the command.
 
 ```C#
