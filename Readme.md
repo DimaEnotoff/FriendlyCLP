@@ -49,7 +49,7 @@ Command groups serve multiple purposes. They organise commands in a tree like st
 
 #### 4. Add the command to the root group
 
-Command should be put in a command group so that Friendly CLP engine.
+Command should be added to a command group so that Friendly CLP engine can find it.
 
 ```C#
     rootCommandGroup.AddCommand("", new DisplaySampleTextCommand());
@@ -57,7 +57,7 @@ Command should be put in a command group so that Friendly CLP engine.
 
 #### 5. Process user input
 
-ProcessLine
+`ProcessLine` method of a command group takes user input, parses it and calls corresponding command if input is valid or returns meaningful error message if not.
 
 ```C#
     while (true) Console.WriteLine(rootCommandGroup.ProcessLine(Console.ReadLine()));
