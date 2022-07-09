@@ -1,17 +1,17 @@
 ## Friendly Command Line Processor
 
-Friendly CLP is a library that facilitates rapid development of command line interfaces with focus on convenience of those who access them from a mobile phone.
+Friendly CLP is a library that facilitates rapid development of command line interfaces with focus on convenience of users who access them from a mobile phone.
 
 
 ### Mobile friendly
 
-Slash, colon, dot and other special characters that are commonly used in most CLIs are cumbersome to access on mobile phone keyboards. To address this issue Friendly CLP uses spaces to separate command groups, commands and parameters from each other.
+Slash, colon, dot and other special characters that are commonly used in most CLIs are cumbersome to type on mobile phone keyboard. To address this issue Friendly CLP uses spaces to separate command groups, commands and parameters from each other.
 
 
 ### Other features
 
 - Easy to add commands and organise them in groups
-- Easy to add parameters, some commonly used types are readily available
+- Easy to add parameters, most commonly used data types are readily available
 - All required parsing is done automatically, payload code is called only if command line is valid
 - Meaningful error messages are given if parsing fails
 - Help articles are generated automatically
@@ -25,12 +25,11 @@ Slash, colon, dot and other special characters that are commonly used in most CL
     using FriendlyCLP;
 ```
 
-#### 2. Add a command
+#### 2. Create a command
 
-Friendly CLP command is a class that implements `ICommand` and has `Command` annotation.  
-_ICommand_ has only one method, called _Execute_ that is a commands entry point and should contain a payload.  
-_Command_ annotation has _name_ and _description_ of the command.  
-_Name_ should be concise because users will have to type it to call the command.
+Friendly CLP command is a class that implements `ICommand` interface and has `Command` annotation.  
+_ICommand_ interface has _Execute_ method that should contain a commands payload.  
+_Command_ annotation has _name_ and _description_ fields. _Name_ is used to call the command from a command line, so it should be concise and should contain no spaces. _Description_ is a brief command description that will be shown in a help article.
 
 ```C#
     [Command("dst", "Display sample text.")]
@@ -42,14 +41,15 @@ _Name_ should be concise because users will have to type it to call the command.
 
 #### 3. Create a root command group
 
-This creates an instance of a command group class that represets a root of a command tree. It can contain other command groups or commands directly.
-Multiple command trees can be used in the same application. They can be used to proccess commands issued by users with different authorization levels, for example.
+Command groups serve multiple purposes. They organise commands in a tree like structure, parse user input, call corresponding commands if input is valid or display error message if not. Following code creates an instance of a command group class that represets a root of a command tree. It can contain other command groups or commands directly. Multiple command trees can be used in the same application. They can be used, for example, to proccess commands issued by users with different authorization levels.
 
 ```C#
     CommandGroup rootCommandGroup = new CommandGroup("My CLI");
 ```
 
-#### 4. Add new command to the root group
+#### 4. Add the command to the root group
+
+Command should be put in a command group so that Friendly CLP engine.
 
 ```C#
     rootCommandGroup.AddCommand("", new DisplaySampleTextCommand());
@@ -57,10 +57,13 @@ Multiple command trees can be used in the same application. They can be used to 
 
 #### 5. Process user input
 
+ProcessLine
+
 ```C#
     while (true) Console.WriteLine(rootCommandGroup.ProcessLine(Console.ReadLine()));
 ```
 
+This example makes the simplest command line interface with just one command with no parameters.
 
 ### Going further
 
