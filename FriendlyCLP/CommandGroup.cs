@@ -1,32 +1,23 @@
 ﻿namespace FriendlyCLP
 {
+
     /// <summary>
     /// Command group is used to organize commands in a tree like structure.
     /// Command group can contain commands and other command groups.
     /// </summary>
-    public class CommandGroup
+    internal class CommandGroup
     {
-        private readonly string Name;
+        internal readonly string Name;
         private readonly string Description;
         private readonly Dictionary<string, CommandGroup> Groups = new Dictionary<string, CommandGroup>();
         private readonly Dictionary<string, CommandWrapper> Commands = new Dictionary<string, CommandWrapper>();
-
-        /// <summary>
-        /// Creates a top level command group that contains all other command groups and commands.
-        /// </summary>
-        /// <param name="description">Command group description. To be used in a help article.</param>
-        public CommandGroup(string description)
-        {
-            Name = null;
-            Description = description;
-        }
 
         /// <summary>
         /// Creates a new command group.
         /// </summary>
         /// <param name="name">Command group name (alphanumeric with no spaces) that will be used to refer this command group in a command line.</param>
         /// <param name="description">Command group description. To be used in a help article.</param>
-        private CommandGroup(string name, string description)
+        internal CommandGroup(string name, string description)
         {
             Name = name;
             Description = description;
@@ -44,7 +35,6 @@
             Groups.Add(name, new CommandGroup(name, description));
         }
 
-
         /// <summary>
         /// Creates a new command group and adds it to the current command group at a given path.
         /// </summary>
@@ -52,8 +42,7 @@
         /// <param name="name">Command group name (alphanumeric with no spaces) that will be used to refer this command group in a command line.</param>
         /// <param name="description">Command group description. To be used in a help article.</param>
         /// <exception cref="ArgumentException">Thrown if path is invalid or an element with such name already exists at a given path.</exception>
-        /// <exception cref="Exception">Internal exception.</exception>
-        public void AddGroup(string path, string name, string description)
+        internal void AddGroup(string path, string name, string description)
         {
             var index = 0;
             switch (Search(path, ref index, out var group, out _))
@@ -89,8 +78,7 @@
         /// <param name="path">Path where to add a command.</param>
         /// <param name="command">Command.</param>
         /// <exception cref="ArgumentException">Thrown if path is invalid or an element with such name already exists at a given path.</exception>
-        /// <exception cref="Exception">Internal exception.</exception>
-        public void AddCommand(string path, ICommand command)
+        internal void AddCommand(string path, ICommand command)
         {
             var index = 0;
             var wrappedCommand = new CommandWrapper(command);
@@ -110,7 +98,7 @@
             }
         }
 
-        private enum SearchResult { GroupFound, CommandFound, NothingFound }
+        internal protected enum SearchResult { GroupFound, CommandFound, NothingFound }
 
         /// <summary>
         /// Parses a command line and searches for mentioned elements.
@@ -121,7 +109,7 @@
         /// <param name="command">Returns command if path poins at a command.</param>
         /// <returns>If path points to existing element <c>GroupFound</c> or <c>CommandFound</c> is returned.
         /// If path is invalid <c>NothingFound</c> is returned.</returns>
-        private SearchResult Search(string line, ref int index, out CommandGroup group, out CommandWrapper command)
+        internal protected SearchResult Search(string line, ref int index, out CommandGroup group, out CommandWrapper command)
         {
             while (index < line.Length && line[index] == ' ') index++;
 
@@ -151,58 +139,10 @@
         }
 
         /// <summary>
-        /// Processes a line from a console user.
-        /// </summary>
-        /// <param name="line">Raw input of a console user.</param>
-        /// <returns>Command result on success, error message on parsing or validation failure.</returns>
-        /// <exception cref="Exception">Internal exception.</exception>
-        public string ProcessLine(string line)
-        {
-            var index = 0;
-            switch (Search(line, ref index, out _, out var command))
-            {
-                case SearchResult.CommandFound:
-                    return command.ParseArgsAndExecute(line, index);
-                case SearchResult.GroupFound:
-                    return "Please specify a command within a group!";
-                case SearchResult.NothingFound:
-                    return "Command not found!";
-                default:
-                    throw new Exception("Internal error. Can not handle this type of search result.");
-            }
-        }
-
-        /// <summary>
-        /// Gets a help article for an element pointed by a path.
-        /// </summary>
-        /// <param name="path">Path to an element.</param>
-        /// <param name="helpArticle">Help article is returned if path is valid.</param>
-        /// <returns>True if path is valid, false otherwise.</returns>
-        /// <exception cref="Exception">Internal exception.</exception>
-        public bool getHelp(string path, out string helpArticle)
-        {
-            var index = 0;
-            switch (Search(path, ref index, out var group, out var command))
-            {
-                case SearchResult.GroupFound:
-                    helpArticle = string.Join(Environment.NewLine, group.getTree());
-                    return true;
-                case SearchResult.CommandFound:
-                    helpArticle = command.Help();
-                    return true;
-                case SearchResult.NothingFound:
-                    helpArticle = null;
-                    return false;
-                default:
-                    throw new Exception("Internal error. Can not handle this type of search result.");
-            }
-        }
-
-        /// <summary>
         /// Gets pseudographics representation of a command tree.
         /// </summary>
         /// <returns>Command tree as a multiline text.</returns>
-        public List<string> getTree()
+        internal List<string> getTree()
         {
             List<string> result = new List<string> { Name == null ? Description : "<" + Name + ": " + Description + ">" };
             var groupCount = 0;

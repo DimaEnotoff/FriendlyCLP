@@ -6,7 +6,7 @@ namespace FriendlyCLP
     /// <summary>
     /// Internal class of the FriendlyCLP engine that wraps user commands.
     /// </summary>
-    internal class CommandWrapper
+    internal sealed class CommandWrapper
     {
         private const string Indentation = "   ";
         internal readonly string Name;
@@ -98,7 +98,12 @@ namespace FriendlyCLP
                 if (!argument.Parse(line, ref index, out var errorMessage)) return errorMessage;
             if (!string.IsNullOrWhiteSpace(line[index..line.Length]))
                 return "Too many arguments!";
-            return Command.Execute();
+            try {
+                return Command.Execute();
+            } catch {
+                return "Internal error!";
+            }
+            
         }
 
         /// <summary>

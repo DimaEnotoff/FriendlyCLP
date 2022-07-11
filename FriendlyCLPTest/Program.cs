@@ -5,24 +5,24 @@ class Program
     private const string _appName = "Friendly console test";
     public const string WellcomeMessage = $"{_appName}, type \"help\", to show command list!";
 
-    private static readonly CommandGroup consoleRoot = new CommandGroup(_appName);
+    private static readonly FCLP CLProcessor = new FCLP(_appName);
 
     [Command("help", "Show help.")]
     private class HelpCommand : ICommand
     {
-        private readonly CommandGroup CLProcessor;
+        private readonly FCLP CLProcessor;
 
         [Argument(0, "path", "Path to a command or a command group.", true, true)]
         private readonly StringArgument Path;
         
-        public HelpCommand(CommandGroup cLProcessor)
+        public HelpCommand(FCLP clProcessor)
         {
-            CLProcessor = cLProcessor ?? throw new ArgumentNullException(nameof(cLProcessor));
+            CLProcessor = clProcessor ?? throw new ArgumentNullException(nameof(clProcessor));
         }
 
         public string Execute()
         {
-            if (CLProcessor.getHelp(Path.Value, out var helpArticle))
+            if (CLProcessor.GetHelp(Path.Value, out var helpArticle))
             {
                 if (Path.IsOmmited)
                     helpArticle += Environment.NewLine + "In order to get help on a particular command please type \"help pathToCommand commandName\".";
@@ -204,18 +204,18 @@ class Program
 
     static void Main(string[] args)
     {
-        consoleRoot.AddGroup("", "tu", "Some useful text utils.");
-        consoleRoot.AddGroup("tu", "mt", "Calculate various string metrics.");
-        consoleRoot.AddGroup("", "calc", "Do some calculus.");
-        consoleRoot.AddCommand("tu", new DisplaySampleTextCommand());
-        consoleRoot.AddCommand("tu", new RemoveCharacterCommand());
-        consoleRoot.AddCommand("tu mt", new CountCharactersCommand());
-        consoleRoot.AddCommand("tu mt", new CountWordsCommand());
-        consoleRoot.AddCommand("calc", new AddArrayCommand());
-        consoleRoot.AddCommand("calc", new DivideCommand());
-        consoleRoot.AddCommand("", new ShowDateTimeCommand());
-        consoleRoot.AddCommand("", new HelpCommand(consoleRoot));
+        CLProcessor.AddGroup("", "tu", "Some useful text utils.")
+        .AddGroup("tu", "mt", "Calculate various string metrics.")
+        .AddGroup("", "calc", "Do some calculus.")
+        .AddCommand("tu", new DisplaySampleTextCommand())
+        .AddCommand("tu", new RemoveCharacterCommand())
+        .AddCommand("tu mt", new CountCharactersCommand())
+        .AddCommand("tu mt", new CountWordsCommand())
+        .AddCommand("calc", new AddArrayCommand())
+        .AddCommand("calc", new DivideCommand())
+        .AddCommand("", new ShowDateTimeCommand())
+        .AddCommand("", new HelpCommand(CLProcessor));
         Console.WriteLine(WellcomeMessage);
-        while (true) Console.WriteLine(consoleRoot.ProcessLine(Console.ReadLine()));
+        while (true) Console.WriteLine(CLProcessor.ProcessLine(Console.ReadLine()));
     }
 }
