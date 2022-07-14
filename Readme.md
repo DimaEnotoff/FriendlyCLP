@@ -5,13 +5,13 @@ Friendly CLP is a library that facilitates rapid development of command line int
 
 ### Mobile friendly
 
-Slash, colon, dot and other special characters that are commonly used in most CLIs are cumbersome to type on mobile phone keyboard. To address this issue Friendly CLP uses spaces to separate command groups, commands and parameters from each other.
+Slash, colon, dot and other special characters that are commonly used in most CLIs are cumbersome to type on mobile phone keyboard. To address this issue Friendly CLP uses spaces to separate command groups, commands and arguments from each other.
 
 
 ### Other features
 
 - Easy to add commands and organise them in groups
-- Easy to add command parameters, most commonly used data types are readily available, creating a custom parameter data type is straightforward
+- Easy to add command arguments, most commonly used data types are readily available, creating a custom argument data type is straightforward
 - All required parsing is done automatically, payload code is called only if command line is valid
 - Meaningful error messages are given if parsing fails
 - Help articles are generated automatically
@@ -63,38 +63,55 @@ In order to make a command invokable from a particular _CommandProcessor_ instan
     while (true) Console.WriteLine(CommandProcessor.ProcessLine(Console.ReadLine()));
 ```
 
-This example makes the simplest command line interface with just one command with no parameters.
+This example makes the simplest command line interface with just one command with no arguments.
 
 ### Going further
 
 #### Adding arguments
 
+The library has some premade argument classes that represent commonly used data types.
+
+- IntArgument
+- IntNonnegativeArgument
+- IntArrayArgument
+- StringArgument
+- CharArgument
+- DateTimeArgument
+- BoolTrueFalseArgument
+- BoolYesNoArgument
+- BoolAllowedForbiddenArgument
+
+Arguments are just annotated fields within a command class.
+Their type should be ether one of aforementioned.
 
 
 ```C#
-    [Command("div", "Divide two integer values.")]
-    class DivideCommand : ICommand
+    [Command("rc", "Remove character in a word.")]
+    private class RemoveCharacterCommand : ICommand
     {
-
-        [Argument(0, "dvd", "Dividend", optional: false, multisegmented: false)]
-        private readonly IntArgument Divident;
-
-        [Argument(1, "dvs", "Divisor", optional: false, multisegmented: false)]
-        private readonly IntArgument Divisor;
-
-        public string Execute()
-        {
-            if (Divisor.Value == 0) return "Can not divide by zero.";
-            return ((float)Divident.Value / Divisor.Value).ToString();
+        [Argument(0, "word", "Word to remove character from.", optional: false, multisegmented: false)]
+        private readonly StringArgument Word;
+        [Argument(1, "char", "Character to be removed.", optional: false, multisegmented: false)]
+        private readonly CharArgument Char;
+        public string Execute() {
+            return Word.Value.Replace(Char.Value.ToString(), "");
         }
     }
 ```
 
+
 #### Arguments
 
-Arguments are classes that extend abstract `Argument` class. Concrete argument implementation has to expose a property through which actual parsed value will be consumed. 
+Arguments are classes that extend abstract `Argument` class. Concrete argument implementation has to expose a property through which actual parsed value will be consumed. There are no restrictions concerning a property name, however all argument type classes readily available in the library have properties called _Value_.
 
-Convert Validate SetDefault
+Friendly CLP command is a class that implements `ICommand` interface and has `Command` annotation.  
+_ICommand_ interface has _Execute_ method that should contain a command payload.  
+_Command_ annotation has _name_ and _description_ fields. _Name_ is a name or an abbriviation of a command that will be used to call it from a command line, so it should be concise and should contain no spaces. _Description_ is a brief command description that will be shown in a help article.
+
+
+Convert
+Validate
+SetDefault
 
 
 
