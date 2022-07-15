@@ -11,7 +11,7 @@ Slash, colon, dot and other special characters that are commonly used in most CL
 ### Other features
 
 - Easy to add commands and organise them in groups
-- Easy to add command arguments, most commonly used data types are readily available, creating a custom argument data type is straightforward
+- Easy to add command arguments, most commonly used argument data types are readily available, creating a custom data type is straightforward
 - All required parsing is done automatically, payload code is called only if command line is valid
 - Meaningful error messages are given if parsing fails
 - Help articles are generated automatically
@@ -67,7 +67,7 @@ This example makes the simplest command line interface with just one command wit
 
 ### Going further
 
-#### Adding arguments
+#### Adding arguments of common types
 
 The library has some premade argument classes that represent commonly used data types.
 
@@ -81,8 +81,8 @@ The library has some premade argument classes that represent commonly used data 
 - BoolYesNoArgument
 - BoolAllowedForbiddenArgument
 
-Arguments are just annotated fields within a command class.
-Their type should be ether one of aforementioned.
+Arguments are just an annotated fields within a command class. Type of an argument field should be either one from aforementioned premade types or
+derived from `Argument` base class if type is custom.
 
 
 ```C#
