@@ -1,18 +1,19 @@
 # Friendly Command Line Processor
 
-**Friendly CLP** is a library that facilitates rapid development of command line interfaces with focus on convenience of users who access them from a mobile phone. The library was used in production to build debugging/engineering menus for self service kiosks and other automation systems.
+**Friendly CLP** is a library that facilitates rapid development of command line interfaces, focusing on the convenience of users who access them from a mobile phone. The library was used in production to build debugging/engineering menus for self-service kiosks and other automation systems.
 
 ## Mobile friendly
 
-Slash, colon, dot and other special characters that are commonly used in most CLIs are cumbersome to type on a mobile phone keyboard. To address this issue **Friendly CLP** uses spaces to separate command groups, commands and arguments from each other. To make it even more convenient for mobile phone users commands are not case sensitive.
+Slash, colon, dot and other special characters commonly used in most CLIs are cumbersome to type on a mobile phone keyboard. To address this issue, **Friendly CLP** uses spaces to separate command groups, commands and arguments from each other. To make it even more convenient for mobile phone users, commands are not case-sensitive.
 
 ## Other features
 
-- Easy to add commands and organize them in tree like structure
+- Easy to add commands and organize them in a treelike structure
 - Easy to add command arguments
   - Commonly used argument data types are readily available
-  - Creating a custom data type arguments is straightforward
-- All required parsing is done automatically, payload code is called only if all arguments are valid
+  - Creating custom data type arguments is straightforward
+- All required parsing is done automatically
+- Payload code is called only if all arguments are valid
 - Meaningful error messages are given if parsing fails
 - Help articles are generated automatically
 
@@ -26,12 +27,12 @@ using FriendlyCLP;
 
 ### 2. Creating a command
 
-**Friendly CLP** command is a class that implements `ICommand` interface and has `Command` annotation.
+**Friendly CLP** command is a class that implements the `ICommand` interface and has the `Command` annotation.
 
-`ICommand` interface has an `Execute` method that must contain a command payload and must return a result as a string.
+The `ICommand` interface has the `Execute` method that must contain a command payload and return a result as a string.
 
-`Command` annotation has following arguments:
-- `names` is a group of names (aliases) of a command that will be used to call it from a command line. Each name should be concise and contain no spaces. Number of names is not limited, but it is reasonable to have a full name and short abbreviation. Vertical bar sign `|` is used to separate one name from another.  
+The `Command` annotation has the following arguments:
+- `names` is a group of names (aliases) of a command that will be used to call it from a command line. Each name should be concise and contain no spaces. The number of names is not limited, but having a full name and short abbreviation is reasonable. Names must be separated by the vertical bar sign `|`.  
 - `description` is a brief command description that will be shown in a help article.
 
 ```C#
@@ -45,7 +46,7 @@ private class DisplaySampleTextCommand : ICommand
 
 ### 3. Creating a Command Processor instance
 
-`CommandProcessor` is a class that contains commands in a tree-like structure, parses user input, calls a corresponding command if input is valid or displays error message if not. Multiple `CommandProcessor` instances, containing different command trees, can be used in the same application. They can be used, for example, to process commands issued by users with different authorization levels.
+`CommandProcessor` is a class that contains commands in a treelike structure, parses user input, calls a corresponding command if the input is valid or displays an error message if not. Multiple `CommandProcessor` instances containing different command trees can be used in the same application, for example, to process commands issued by users with different authorization levels.
 
 ```C#
 var CommandProcessor = new CommandProcessor("My CLI");
@@ -53,7 +54,7 @@ var CommandProcessor = new CommandProcessor("My CLI");
 
 ### 4. Adding the command to the CommandProcessor 
 
-In order to make a command invokable from a particular `CommandProcessor` instance it must be added to it.
+A command must be added to a particular `CommandProcessor` to be invokable from it.
 
 ```C#
 CommandProcessor.AddCommand(new DisplaySampleTextCommand());
@@ -61,7 +62,7 @@ CommandProcessor.AddCommand(new DisplaySampleTextCommand());
 
 ### 5. Processing user input
 
-`ProcessLine` method of a `CommandProcessor` instance takes user input, parses it and calls a corresponding command if input is valid or returns a meaningful error message if not.
+The `ProcessLine` method of a `CommandProcessor` instance takes user input, parses it and calls a corresponding command if the input is valid or returns a meaningful error message if not.
 
 ```C#
 while (true) {
@@ -89,7 +90,7 @@ Command not found!
 
 Arguments are just annotated properties of a command class. Properties must be private and must not be instantiated.
 
-The library has some premade argument property types that represent commonly used data types. An argument property type must be one of those in the list.
+The library has some premade argument property types representing commonly used data types. An argument property type must be one of those on the list.
 - IntArgument
 - LongArgument
 - FloatArgument
@@ -101,18 +102,18 @@ The library has some premade argument property types that represent commonly use
 - CharArgument
 - DateTimeArgument
 - BoolTrueFalseArgument _This type recognises true as "true" or "t" and false as "false" or "f"._
-- BoolYesNoArgument _This type recognises true as "yes" or "y" and false as "no" or "n"._
-- BoolAllowedForbiddenArgument _This type recognises true as "allowed" or "a" and false as "forbidden" or "f"._
+- BoolYesNoArgument _This type recognizes true as "yes" or "y" and false as "no" or "n"._
+- BoolAllowedForbiddenArgument _This type recognizes true as "allowed" or "a" and false as "forbidden" or "f"._
 
-All of these classes have a property called `Value`, through which the actual value of parsed user input is exposed.
+All these classes have a property called `Value`, which exposes the actual value of parsed user input.
 
-Arguments must be annotated by an `Argument` annotation that has following arguments:
+Arguments must be annotated by the `Argument` annotation that has the following arguments:
 - `position` - a sort key for all arguments within a command.
 - `name` - an argument name that will be shown in a help article.
 - `description` - a brief argument description that will be shown in a help article.
-- `multisegmented` will be explained a little later, should be _false_ for now.
+- `multisegmented` will be explained a little later. It must be _false_ for now.
 
-Simple example of using standard type arguments in a command:
+A simple example of using standard type arguments in a command:
 ```C#
 [Command("removechar|rc", "remove character in a word")]
 private class RemoveCharacterCommand : ICommand
@@ -146,15 +147,15 @@ Error parsing argument "char". Character expected.
 
 ### Special arguments
 
-Last argument of a command (that has the highest position number) can be **special**. There are two types of special arguments: _optional_ and _multisegmented_. These types are not mutually exclusive. Same argument can be multi segmented and optional at the same time.
+The last command argument (with the highest position number) can be **special**. There are two types of special arguments: _optional_ and _multisegmented_. These types are not mutually exclusive. The same argument can be multi-segmented and optional at the same time.
 
 #### Optional
 
-Optional argument is an argument that can be omitted. In order to make the argument optional it must be annotated with `Optional` annotation.
-If the optional argument is omitted, its `IsOmitted` property is set to true, and `Value` property is left stale.
- `IsOmitted` flag should be always checked for optional arguments to prevent a command from consuming stale `Value` property value.
+An optional argument is an argument that can be omitted. An argument must be annotated with the `Optional` annotation to make it optional.
+If an optional argument is omitted, its `IsOmitted` property is set to true, and the `Value` property is left stale.
+The `IsOmitted` flag should always be checked for optional arguments to prevent a command from consuming stale `Value` property value.
 
-Simple example that shows usage of an optional argument:
+A simple example that shows the usage of an optional argument:
 ```C#
 [Command("removechar|rc", "remove character in a word")]
 private class RemoveCharacterCommand : ICommand
@@ -166,7 +167,7 @@ private class RemoveCharacterCommand : ICommand
     private readonly CharArgument Char;
     public string Execute()
     {
-        if (Char.IsOmitted) //Checking if user omitted this argument
+        if (Char.IsOmitted) //Checking if a user omitted this argument
             return Word.Value;
         return Word.Value.Replace(Char.Value.ToString(), "");
     }
@@ -183,7 +184,7 @@ abracadabra
 
 ##### Default
 
-It is possible to set a default value of an optional argument by setting `defaultValue` argument of `Optional` annotation. `defaultValue` is a string that will be used instead of user input when the argument is omitted.
+It is possible to set a default value of an optional argument by setting the `defaultValue` argument of the `Optional` annotation. When the argument is omitted, the `defaultValue` string will be used instead of user input.
 
 ```C#
 [Argument(0, "country", "country of residence", multisegmented: false)]
@@ -191,7 +192,7 @@ It is possible to set a default value of an optional argument by setting `defaul
 private readonly StringArgument Country;
 ```
 
-`defaultValue` is not checked for validity and in case an invalid value is provided, omitting the argument will cause parsing or validation error.
+`defaultValue` is not checked for validity, and in case an invalid value is provided, omitting the argument will cause a parsing or validation error.
 
 Example of a wrong default value leading to an error on argument omission:
 ```C#
@@ -222,7 +223,7 @@ Error parsing argument "times". Integer value expected.
 
 #### Multi segmented
 
-**Friendly CLP** uses spaces as separators between command groups, commands and arguments. If an argument is expected to have spaces inside, it must be marked as multi segmented and must be at the last position in the command. To mark an argument as multi segmented `multisegmented` argument of `Argument` annotation must be set to _true_.
+**Friendly CLP** uses spaces as separators between command groups, commands and arguments. If an argument is expected to have spaces inside, it must be marked as multi-segmented, and it must be at the last position in the command. To mark an argument as a multi-segmented `multisegmented` argument of the `Argument` annotation must be set to _true_.
 
 ```C#
 [Command("repp", "repeat phrase X number of times")]
@@ -249,15 +250,15 @@ the bird is the word the bird is the word the bird is the word
 
 ### Adding custom type arguments
 
-In case standard argument types do not meet requirements, custom argument types can be easily made. Argument type is a class that extends `Argument` or `SimpleArgument` class.
+Custom argument types can be easily made if standard argument types do not meet requirements. Argument type is a class that extends `Argument` or `SimpleArgument` class.
 
 ### Extending SimpleArgument class
 
-This approach is suitable for data types for which following function is defined:
+This approach is suitable for data types for which the following function is defined:
 ```C#
 delegate bool TryParseDelegate(string input, out T output);
 ```
-A conversion function should be provided to the constructor alongside with a custom error message that will be displayed if parsing goes wrong.
+A conversion function should be provided to the constructor, along with a custom error message that should be displayed if parsing goes wrong.
 
 ```C#
     public class CustomTypeArgument : SimpleArgument<CustomType>
@@ -273,9 +274,9 @@ Types derived from `SimpleArgument` will expose a parsed value through the `Valu
 
 This is the most general and the most flexible approach.
 A custom argument type class should extend the `Argument` class and override the abstract `Convert` method.
-A concrete argument implementation has to expose a property or properties through which the actual parsed value will be consumed. There are no restrictions concerning a property name, however all readily available in the library argument classes have property called `Value`.
+A concrete argument implementation has to expose a property or properties through which the actual parsed value will be consumed. There are no restrictions concerning a property name. However, all readily available in the library argument classes have a property called `Value`.
 
-This example shows how to make a custom argument type that represents _DateTime_ display format.
+This example shows how to make a custom argument type representing the _DateTime_ display format.
 
 ```C#
 private class DateTimeDisplayFormatArgument : Argument
@@ -315,9 +316,9 @@ private class DateTimeDisplayFormatArgument : Argument
 
 ### Argument validation
 
-After successful parsing of a user input by the `Convert` method, the `Validate` method is called. It performs an additional check on the already parsed value. By default it does nothing. To make it work it must be overridden in a child class. If validation fails, the `Execute` method of the command is not called.
+After successfully parsing a user input by the `Convert` method, the `Validate` method is called. It performs an additional check on the already parsed value. By default, it does nothing and must be overridden in a child class to make it work. If validation fails, a command's `Execute` method is not called.
 
-For example, if only odd integer numbers should be accepted following validated argument data type could be created based on `IntArgument` data type.
+For example, if only odd integer numbers should be accepted following validated argument data type could be created based on the `IntArgument` data type.
 
 ```C#
 private class OddIntArgument : IntArgument {
@@ -340,7 +341,7 @@ private class OddIntArgument : IntArgument {
 
 Commands are organized in a treelike structure for convenience.
 
-Related commands can be grouped together with command groups. Command groups have their names and descriptions. They can contain commands and nested command groups. Nesting depth is not limited.
+Related commands can be grouped with command groups. Command groups have their names and descriptions. They can contain commands and nested command groups. Nesting depth is not limited.
 
 There are two ways to create a hierarchy.
 
@@ -373,7 +374,7 @@ CommandProcessor.AddGroup("", "calc", "do some calculus")
     .AddCommand("calc tr", new TgCommand())
     .AddCommand("calc tr", new CtgCommand());
 ```
-Disadvantage of this approach is that changing a group name requires modifying all paths in which this group was mentioned.
+The disadvantage of this approach is that changing a group name requires modifying all paths in which this group was mentioned.
 
 ### Help command
 
@@ -381,9 +382,9 @@ The `CommandProcessor` automatically builds and provides help articles for comma
 ```C#
 public bool GetHelp(string path, out string helpArticle)
 ```
-Method returns _true_ if `path` points to an existing element. Empty path is also considered valid, it points to the root of the command tree.
+Method returns _true_ if `path` points to an existing element. An empty path is also considered valid. It points to the command tree's root.
 
-If `path` points to a command group, including root, the command tree of this group is returned.
+If `path` points to a command group, including the root command group, a command tree of this group is returned.
 
 Full tree, empty `path`:
 ```
@@ -413,7 +414,7 @@ Subtree, `path` = “textutils metrics”:
 └──"countwords|cw" - count words
 ```
 
-If `path` points to a command, help article is returned:
+If `path` points to a command, a help article is returned:
 ```
 Command: removechar|rc
 Description: remove character in a word
@@ -423,7 +424,7 @@ Usage: removechar|rc word [char]
       char: character to be removed (optional)
 ```
 
-In order to provide a help article to a user, the `GetHelp` method should be wrapped with a help command. Help command is not built-in in `CommandProcessor` to allow its customization.
+To provide a help article to a user, the `GetHelp` method should be wrapped with a help command. The help command is not built-in in `CommandProcessor` to allow its customization.
 
 Here is an example of a help command:
 ```C#
@@ -462,7 +463,7 @@ CommandProcessor.AddCommand(new HelpCommand(CommandProcessor));
 
 ## Configuration errors
 
-**Friendly CLP** detects common configuration errors including: invalid names, overlapping command names and argument positions, missing annotations, annotating wrong entities, declaring non last argument as _multisegmented_ or _optional_ etc. In case such configuration error is found an exception will be thrown.
+**Friendly CLP** detects common configuration errors, including invalid names, overlapping command names and argument positions, missing annotations, annotating wrong entities, declaring non-last argument as _multisegmented_ or _optional_ etc. If such a configuration error is found, an exception will be thrown.
 
 ## Example projects
 
@@ -471,11 +472,11 @@ There are three example projects:
 - ConsoleExample
 - TelegramBotExample
 
-**CommandSetExample** is a command set that is specially made to show most **Friendly CLP** features.
+**CommandSetExample** is a command set specially made to show the most **Friendly CLP** features.
 
-**ConsoleExample** is a simple console application that allows to interact with the command set example.
+**ConsoleExample** is a simple console application that allows one to interact with the command set example.
 
-**TelegramBotExample** connects the command set example to a Telegram bot with the help of the _Telegram.Bot_ library. In order to run this example API key from the BotFather is needed. 
+**TelegramBotExample** connects the command set example to a Telegram bot with the help of the _Telegram.Bot_ library. To run this example API key from the BotFather is needed. 
 
 Enjoy!  
 :raccoon:
