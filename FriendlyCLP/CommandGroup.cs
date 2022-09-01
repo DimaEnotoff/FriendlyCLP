@@ -1,4 +1,7 @@
-﻿namespace FriendlyCLP
+﻿using System;
+using System.Collections.Generic;
+
+namespace FriendlyCLP
 {
 
     /// <summary>
@@ -55,7 +58,7 @@
         /// <param name="description">Command group description. To be used in a help article.</param>
         internal CommandGroup(string names, string description)
         {
-            NameList = names.Split(NamesSeparator, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            NameList = names.Split(NamesSeparator, StringSplitOptions.RemoveEmptyEntries);
 
             if (NameList.Length == 0)
                 throw new ArgumentException("Invalid command group names" + (names.Length == 0 ? " (empty)" : ": \"" + names + "\"") + ".");

@@ -1,4 +1,6 @@
-﻿namespace FriendlyCLP
+﻿using System;
+
+namespace FriendlyCLP
 {
     /// <summary>
     /// Friendly command line processor class that represents a distinct command set.

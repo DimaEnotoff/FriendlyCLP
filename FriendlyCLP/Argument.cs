@@ -1,4 +1,6 @@
-﻿namespace FriendlyCLP
+﻿using System;
+
+namespace FriendlyCLP
 {
     /// <summary>
     /// Base class for all FriendlyCLP command arguments.

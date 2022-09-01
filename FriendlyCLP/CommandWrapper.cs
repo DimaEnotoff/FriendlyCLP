@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace FriendlyCLP
@@ -178,7 +181,7 @@ namespace FriendlyCLP
         /// <exception cref="ArgumentException">Thrown if attribute params are invalid.</exception>
         public CommandAttribute(string names, string description)
         {
-            NameList = names.Split(NamesSeparator, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            NameList = names.Split(NamesSeparator, StringSplitOptions.RemoveEmptyEntries);
 
             if (NameList.Length == 0)
                 throw new ArgumentException("Invalid command names" + (names.Length == 0 ? " (empty)" : ": \"" + names + "\"") + ".");

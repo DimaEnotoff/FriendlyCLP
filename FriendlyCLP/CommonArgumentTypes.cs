@@ -1,4 +1,8 @@
-﻿namespace FriendlyCLP
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace FriendlyCLP
 {
     /// <summary>
     /// Argument template mostly useful for types for which TryParse function is defined.
