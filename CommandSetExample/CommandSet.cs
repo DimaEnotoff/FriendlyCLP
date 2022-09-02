@@ -1,7 +1,6 @@
 ﻿using FriendlyCLP;
 using System;
 using System.Linq;
-using System.Text;
 
 namespace CommandSetExample
 {
@@ -71,7 +70,7 @@ namespace CommandSetExample
             [Argument(0, "text", "text to count words in", multisegmented: true)]
             private readonly StringArgument Text;
 
-            public string Execute() => Text.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length.ToString();
+            public string Execute() => Text.Value.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries).Length.ToString();
         }
 
         /// <summary>

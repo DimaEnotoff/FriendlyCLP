@@ -7,6 +7,7 @@ namespace FriendlyCLP
     /// </summary>
     public abstract class Argument
     {
+        private static readonly char[] ArgumentsSeparator = new[] { ' ' };
         public readonly string Name;
         public readonly string Description;
 
@@ -79,7 +80,7 @@ namespace FriendlyCLP
                 return Convert(line, out errorMessage) && Validate(out errorMessage);
             }
 
-            var lineParts = line.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+            var lineParts = line.Split(ArgumentsSeparator, 2, StringSplitOptions.RemoveEmptyEntries);
             var rawArgument = lineParts[0];
             remainder = lineParts.Length == 2 ? lineParts[1] : string.Empty;
 

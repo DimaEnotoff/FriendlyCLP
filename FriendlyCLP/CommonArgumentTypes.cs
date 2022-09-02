@@ -96,12 +96,12 @@ namespace FriendlyCLP
     /// </summary>
     public class IntArrayArgument : Argument
     {
-
+        private static readonly char[] ElementsSeparator = new[] { ' ' };
         public int[] Value { get; private set; }
 
         public override bool Convert(string line, out string errorMessage)
         {
-            var elements = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var elements = line.Split(ElementsSeparator, StringSplitOptions.RemoveEmptyEntries);
             Value = new int[elements.Length];
 
             for (int i = 0; i < elements.Length; i++)

@@ -166,7 +166,8 @@ namespace FriendlyCLP
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class CommandAttribute : Attribute
     {
-        private const string NamesSeparator = "|";
+        private static readonly string NamesSeparator = "|";
+        private static readonly string[] WrappedNamesSeparator = new[] { NamesSeparator };
 
         public readonly string Names;
         public readonly string[] NameList;
@@ -181,7 +182,7 @@ namespace FriendlyCLP
         /// <exception cref="ArgumentException">Thrown if attribute params are invalid.</exception>
         public CommandAttribute(string names, string description)
         {
-            NameList = names.Split(NamesSeparator, StringSplitOptions.RemoveEmptyEntries);
+            NameList = names.Split(WrappedNamesSeparator, StringSplitOptions.RemoveEmptyEntries);
 
             if (NameList.Length == 0)
                 throw new ArgumentException("Invalid command names" + (names.Length == 0 ? " (empty)" : ": \"" + names + "\"") + ".");

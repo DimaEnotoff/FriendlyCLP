@@ -26,7 +26,7 @@ namespace FriendlyCLP
         /// <param name="command">Command that implements <p>ICommand</p> interface.</param>
         /// <returns>Current command group, to facilitate method chaining.</returns>
         /// <exception cref="ArgumentException">Thrown if group already contains other element with the same name.</exception>
-        public ICommandGroup AddCommand(ICommand command);
+        ICommandGroup AddCommand(ICommand command);
     }
 
     /// <summary>
@@ -36,7 +36,10 @@ namespace FriendlyCLP
     /// </summary>
     internal class CommandGroup: ICommandGroup
     {
-        private const string NamesSeparator = "|";
+        private static readonly string NamesSeparator = "|";
+        private static readonly string [] WrappedNamesSeparator = new[] { NamesSeparator };
+        private static readonly char[] ElementsSeparator = new[] { ' ' };
+
         internal readonly string Names;
         internal readonly string[] NameList;
         internal readonly string Description;
@@ -58,7 +61,7 @@ namespace FriendlyCLP
         /// <param name="description">Command group description. To be used in a help article.</param>
         internal CommandGroup(string names, string description)
         {
-            NameList = names.Split(NamesSeparator, StringSplitOptions.RemoveEmptyEntries);
+            NameList = names.Split(WrappedNamesSeparator, StringSplitOptions.RemoveEmptyEntries);
 
             if (NameList.Length == 0)
                 throw new ArgumentException("Invalid command group names" + (names.Length == 0 ? " (empty)" : ": \"" + names + "\"") + ".");
@@ -197,7 +200,7 @@ namespace FriendlyCLP
                 return SearchResult.GroupFound;
             }
 
-            var lineParts = line.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+            var lineParts = line.Split(ElementsSeparator, 2, StringSplitOptions.RemoveEmptyEntries);
             var nextElementName = lineParts[0].ToLowerInvariant();
             remainder = lineParts.Length == 2 ? lineParts[1] : string.Empty;
 
