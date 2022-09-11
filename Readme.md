@@ -67,7 +67,7 @@ The `ProcessLine` method of a `CommandProcessor` instance takes user input, pars
 ```C#
 while (true) {
     var request = Console.ReadLine();
-    var response = MyCommandSet.CommandProcessor.ProcessLine(request);
+    var response = CommandProcessor.ProcessLine(request);
     Console.WriteLine(response);
 }
 ```
