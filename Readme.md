@@ -261,11 +261,11 @@ delegate bool TryParseDelegate(string input, out T output);
 A conversion function should be provided to the constructor, along with a custom error message that should be displayed if parsing goes wrong.
 
 ```C#
-    public class CustomTypeArgument : SimpleArgument<CustomType>
-    {
-        public IntArgument(ArgumentAttribute attribute, OptionalAttribute optional) :
-            base(CustomType.TryParse, "CustomType value expected.", attribute, optional) { }
-    }
+public class CustomTypeArgument : SimpleArgument<CustomType>
+{
+    public IntArgument(ArgumentAttribute attribute, OptionalAttribute optional) :
+        base(CustomType.TryParse, "CustomType value expected.", attribute, optional) { }
+}
 ```
 
 Types derived from `SimpleArgument` will expose a parsed value through the `Value` property.
