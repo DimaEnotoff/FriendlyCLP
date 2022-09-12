@@ -244,7 +244,7 @@ class RepeatPhraseCommand : ICommand
 
 Usage example:
 ```
-tu repp 3 the bird is the word
+repp 3 the bird is the word
 the bird is the word the bird is the word the bird is the word
 ```
 
